@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://unpkg.com/@tailwindcss/browser@4"></script>
+    <title>Calculator</title>
+</head>
+<body class="flex justify-center items-center h-screen bg-gray-900">
+    <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-72">
+        <div id="display" class="bg-gray-700 text-white text-2xl p-3 rounded mb-4 text-right">0</div>
+        <div class="grid grid-cols-4 gap-2">
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="clearDisplay()">C</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('/')">/</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('*')">*</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('-')">-</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('7')">7</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('8')">8</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('9')">9</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('+')">+</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('4')">4</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('5')">5</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('6')">6</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('1')">1</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('2')">2</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('3')">3</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="calculateResult()">=</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500 col-span-2" onclick="appendValue('0')">0</button>
+            <button class="bg-gray-600 text-white text-xl p-4 rounded hover:bg-gray-500" onclick="appendValue('.')">.</button>
+        </div>
+    </div>
+
+    <script>
+        let ans = 0;  // To store the current result
+        let last = null;  // To track the last operator or number
+
+        function appendValue(value) {
+            const display = document.getElementById("display");
+
+            // If the display is currently "0", reset it to empty
+            if (display.innerText === "0") display.innerText = "";
+
+            // Append the value to the display
+            display.innerText += value;
+
+            // Check if the value is a number
+            if (!isNaN(value)) {
+                // If last was a number, we need to combine them
+                if (last === '+' || last === '-' || last === '*' || last === '/') {
+                    // Perform the operation
+                    calculateIntermediateResult(value);
+                } else {
+                    // If last was a number, we just add to the display as usual
+                    ans = Number(display.innerText);  // Set the answer to the current value in display
+                }
+            } else {
+                // Update the last operation
+                last = value;
+            }
+        }
+
+        function calculateIntermediateResult(value) {
+            if (last === '+') {
+                ans += +value; // Add the current value
+            } else if (last === '-') {
+                ans -= +value; // Subtract the current value
+            } else if (last === '*') {
+                ans *= +value; // Multiply the current value
+            } else if (last === '/') {
+                ans /= +value; // Divide by the current value
+            }
+        }
+
+        function calculateResult() {
+            const display = document.getElementById("display");
+            display.innerText = ans;  // Display the final result
+        }
+
+        function clearDisplay() {
+            document.getElementById("display").innerText = "0";  // Reset the display to 0
+            ans = 0;  // Reset the result
+            last = null;  // Reset the last operation
+        }
+    </script>
+</body>
+</html>
