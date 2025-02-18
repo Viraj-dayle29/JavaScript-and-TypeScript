@@ -31,27 +31,62 @@
     </div>
 
     <script>
-        function appendValue(value) {
-            const display = document.getElementById("display");
+        let last = "+";
+        let last_num = 0;
+        let ans = 0;
+        let current = "";
 
-            if (display.innerText === "0") {
-                display.innerText = value;
-            } else {
-                display.innerText += value;
+        function appendValue(value){
+            const display = document.getElementById('display');
+            if(display.innerText === "0") display.innerText = "";
+            display.innerText += value;
+            if(isNaN(value)){
+                if(current != ""){
+                    calculation(Number(current),last);
+                    last = value;
+                    current = "";
+                }
+            }else{
+                current += value;
             }
         }
 
-        function calculateResult() {
-            const display = document.getElementById("display");
-            try {
-                display.innerText = new Function(`return ${display.innerText}`)();
-            } catch (error) {
-                display.innerText = "Error";
+        function calculation(current,last){
+            switch (last) {
+                case '+':
+                    ans += current;
+                    last_num = current;
+                    break;
+                case '-':
+                    ans -= current;
+                    last_num = -current;
+                break;
+                case '*':
+                    ans = (ans - last_num) + (current * last_num);
+                    last_num = last_num * current;
+                    break;
+                case '/':
+                    ans = (ans - last_num) + (current / last_num);
+                    last_num = last_num / current;
+                break;
             }
         }
 
-        function clearDisplay() {
-            document.getElementById("display").innerText = "0";
+        function calculateResult(){
+            calculation(Number(current),last);
+            const display = document.getElementById('display');
+            display.innerText = ans;
+            current = ans.toString();
+            last = "+";
+        }
+
+        function clearDisplay(){
+            const display = document.getElementById('display');
+            display.innerText = "0";
+            last = "+";
+            last_num = 0;
+            ans = 0;
+            current = "";
         }
     </script>
 </body>
